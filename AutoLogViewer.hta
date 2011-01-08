@@ -5,6 +5,16 @@
 <script type="text/javascript">
 var fso = new ActiveXObject("Scripting.FileSystemObject");
 var files = [];
+function formatDate(d) {
+    //alert(d);
+    return (d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + d.getHours() + ':'
+    + d.getMinutes() + ':' + d.getSeconds()).replace(/(\D)(\d)(\b|(?=\D))/g, "$10$2");
+    s = '';
+    for (i in d) {
+        s += i + ' ';
+    }
+    return "" + s;
+}
 function updateFileList() {
     var TemporaryFolder = 2
     var tfolder = fso.GetSpecialFolder(TemporaryFolder);
@@ -15,10 +25,13 @@ function updateFileList() {
         var fd = {
             name: f.Name,
             path: f.Path,
+            size: f.Size,
             dateLastModified: f.DateLastModified
         };
         files.push(fd);
     }
+    files.sort(function (a, b) { return b.dateLastModified - a.dateLastModified; });
+
     var filelistDiv = document.getElementById('filelist');
     for (var i = filelistDiv.childNodes.length - 1; i >= 0; i--) {
         filelistDiv.removeChild(filelistDiv.childNodes.item(i));
@@ -28,11 +41,13 @@ function updateFileList() {
     filelistDiv.appendChild(document.createElement('br'));
     for (var i in files) {
         var f = files[i];
+        filelistDiv.appendChild(document.createTextNode(formatDate(new Date(f.dateLastModified)) + " "));
         var a = document.createElement('a');
         a.setAttribute('href', '');
         a.attachEvent('onclick', new Function('showLogFile(' + i + '); return false;'));
         a.appendChild(document.createTextNode(f.name));
         filelistDiv.appendChild(a);
+        filelistDiv.appendChild(document.createTextNode(' (' + f.size + ')'));
         filelistDiv.appendChild(document.createElement('br'));
     }
 }
