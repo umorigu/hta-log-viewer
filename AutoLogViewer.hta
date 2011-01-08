@@ -9,6 +9,11 @@ function formatDate(d) {
     return (d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + d.getHours() + ':'
     + d.getMinutes() + ':' + d.getSeconds()).replace(/(\D)(\d)(\b|(?=\D))/g, "$10$2");
 }
+function figureNumber(value) {
+   var num = '' + value;
+    while (num != (num = num.replace(/^(-?\d+)(\d{3})/, "$1,$2")));
+    return num;
+}
 function updateFileList() {
     var TemporaryFolder = 2
     var tfolder = fso.GetSpecialFolder(TemporaryFolder);
@@ -40,7 +45,7 @@ function updateFileList() {
         a.attachEvent('onclick', new Function('showLogFile(' + i + '); return false;'));
         a.appendChild(document.createTextNode(f.name));
         filelistDiv.appendChild(a);
-        filelistDiv.appendChild(document.createTextNode(' (' + f.size + ')'));
+        filelistDiv.appendChild(document.createTextNode(' (' + figureNumber(f.size) + ')'));
         filelistDiv.appendChild(document.createElement('br'));
     }
 }
