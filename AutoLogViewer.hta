@@ -106,16 +106,20 @@ function updateFileList() {
     prevFiles = {target: targetDir, files: files};
 }
 function showLogFile(index) {
-    var fout = fso.CreateTextFile("tailf2.js");
+    var TemporaryFolder = 2;
+    var tfolder = fso.GetSpecialFolder(TemporaryFolder);
+    var tailfPath = tfolder.Path + "\\tailf_" + fso.GetTempName() + ".js";
+    var fout = fso.CreateTextFile(tailfPath);
     fout.WriteLine(__tailf_main.toString());
     fout.WriteLine('__tailf_main();');
     fout.Close();
 
     var f = files[index];
-    var cmd = 'cmd /c title "' + f.name + '" & cscript //nologo "' + 'tailf2.js' + '" "' + f.path + '"';
+    var cmd = 'cmd /c title "' + f.name + '" & cscript //nologo "' + tailfPath + '" "' + f.path + '"';
     wsh.Run(cmd);
 
-    setTimeout("deleteFileByPost('tailf2.js')", 10 * 1000);
+    // Delete "tailf.js" after 10 seconds.
+    setTimeout("deleteFileByPost('" + tailfPath.replace(/\\/g, "\\\\") + "')", 10 * 1000);
 }
 window.attachEvent('onload', init);
 
