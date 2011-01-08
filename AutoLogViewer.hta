@@ -6,14 +6,8 @@
 var fso = new ActiveXObject("Scripting.FileSystemObject");
 var files = [];
 function formatDate(d) {
-    //alert(d);
     return (d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + d.getHours() + ':'
     + d.getMinutes() + ':' + d.getSeconds()).replace(/(\D)(\d)(\b|(?=\D))/g, "$10$2");
-    s = '';
-    for (i in d) {
-        s += i + ' ';
-    }
-    return "" + s;
 }
 function updateFileList() {
     var TemporaryFolder = 2
