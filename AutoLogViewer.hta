@@ -45,11 +45,14 @@ function updateFileList() {
     updateTimeLabelSpan.innerHTML = new Date().toString();
 
     var filterRexexText = document.getElementById('filterText').value;
+    filterRexexText = filterRexexText.replace(/^\s+|\s+$/g, "");
     var regexp = new RegExp(filterRexexText, "i");
     for (var i in files) {
         var f = files[i];
-        if (!f.name.match(regexp)) {
-            continue;
+        if (filterRexexText !== "") {
+            if (!f.name.match(regexp)) {
+                continue;
+            }
         }
         filelistDiv.appendChild(document.createTextNode(formatDate(new Date(f.dateLastModified)) + " "));
         var a = document.createElement('a');
