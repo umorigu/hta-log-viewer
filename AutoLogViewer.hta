@@ -36,9 +36,10 @@ function updateFileList() {
         filelistDiv.appendChild(document.createElement('br'));
     }
 }
-function showLogFile() {
+function showLogFile(index) {
+    var f = files[index];
     var file = "tailf.js";
-    var cmd = 'cscript //nologo tailf.js "' + file + '"';
+    var cmd = 'cscript //nologo tailf.js "' + f.path + '"';
     var wsh = new ActiveXObject("WScript.Shell");
     wsh.Run(cmd);
 }
