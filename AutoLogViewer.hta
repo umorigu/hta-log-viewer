@@ -17,8 +17,7 @@ function figureNumber(value) {
     return num;
 }
 function updateFileList() {
-    var TemporaryFolder = 2
-    var TemporaryFolder = 2
+    var TemporaryFolder = 2;
     var tfolder = fso.GetSpecialFolder(TemporaryFolder);
     if (document.getElementById('place_radio_desktop').checked) {
         var desktopPath = wsh.SpecialFolders('Desktop');
@@ -49,7 +48,6 @@ function updateFileList() {
     var regexp = new RegExp(filterRexexText, "i");
     for (var i in files) {
         var f = files[i];
-
         if (!f.name.match(regexp)) {
             continue;
         }
