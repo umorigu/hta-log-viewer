@@ -7,6 +7,11 @@
 var fso = new ActiveXObject("Scripting.FileSystemObject");
 var wsh = new ActiveXObject("WScript.Shell");
 var files = [];
+
+function init() {
+    updateFileList();
+    setInterval('updateFileList()', 60 * 1000);
+}
 function formatDate(d) {
     return (d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + d.getHours() + ':'
     + d.getMinutes() + ':' + d.getSeconds()).replace(/(\D)(\d)(\b|(?=\D))/g, "$10$2");
@@ -69,14 +74,14 @@ function showLogFile(index) {
     var cmd = 'cmd /c title "' + f.name + '" & cscript //nologo tailf.js "' + f.path + '"';
     wsh.Run(cmd);
 }
-window.attachEvent('onload', updateFileList);
+window.attachEvent('onload', init);
 </script>
 </head>
 <body>
 <form id="form1">
 Filter: <input type="text" id="filterText" size="80" value="(\.log$)|(\.txt$)" /><br />
-<input type="radio" name="place" id="place_radio_temp" value="temp" checked>TEMP<br>
-<input type="radio" name="place" id="place_radio_desktop" value="desktop">Desktop<br>
+<input type="radio" name="place" id="place_radio_temp" value="temp" checked onclick="updateFileList()">TEMP<br>
+<input type="radio" name="place" id="place_radio_desktop" value="desktop" onclick="updateFileList()">Desktop<br>
 <!--
 <input type="radio" name="place" value="other">: <input type="text" name="p"><br>
 -->
