@@ -30,9 +30,8 @@ function updateFileList() {
     for (var i = filelistDiv.childNodes.length - 1; i >= 0; i--) {
         filelistDiv.removeChild(filelistDiv.childNodes.item(i));
     }
-    filelistDiv.cler
-    filelistDiv.appendChild(document.createTextNode(new Date()));
-    filelistDiv.appendChild(document.createElement('br'));
+    var updateTimeLabelSpan = document.getElementById('updateTimeLabel');
+    updateTimeLabelSpan.innerHTML = new Date().toString();
     for (var i in files) {
         var f = files[i];
         filelistDiv.appendChild(document.createTextNode(formatDate(new Date(f.dateLastModified)) + " "));
@@ -61,8 +60,10 @@ window.attachEvent('onload', updateFileList);
 <input type="radio" name="place" value="desktop">DESKTOP<br>
 <input type="radio" name="place" value="other">: <input type="text" name="p"><br>
 -->
-</form>
 <hr>
+<input type="button" id="updateButton" value="Update File List" onclick="updateFileList()">
+<span id="updateTimeLabel">Update Time Label</span>
+</form>
 <div id="filelist">
 <a id="f1" href="#" onclick="showLogFile()">file 1</a><br>
 <a id="f2" href="#" onclick="showLogFile()">file 2</a><br>
