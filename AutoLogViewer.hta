@@ -22,6 +22,9 @@ function figureNumber(value) {
     while (num != (num = num.replace(/^(-?\d+)(\d{3})/, "$1,$2")));
     return num;
 }
+function deleteFileByPost(filePath) {
+    fso.DeleteFile(filePath);
+}
 function updateFileList() {
     var targetDir = "TEMP";
     var TemporaryFolder = 2;
@@ -109,8 +112,10 @@ function showLogFile(index) {
     fout.Close();
 
     var f = files[index];
-    var cmd = 'cmd /c title "' + f.name + '" & cscript //nologo "' + 'tailf.js' + '" "' + f.path + '"';
+    var cmd = 'cmd /c title "' + f.name + '" & cscript //nologo "' + 'tailf2.js' + '" "' + f.path + '"';
     wsh.Run(cmd);
+
+    setTimeout("deleteFileByPost('tailf2.js')", 10 * 1000);
 }
 window.attachEvent('onload', init);
 
