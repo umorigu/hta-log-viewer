@@ -7,6 +7,7 @@
 var fso = new ActiveXObject("Scripting.FileSystemObject");
 var wsh = new ActiveXObject("WScript.Shell");
 var files = [];
+var prevFiles = { target: '', files: [] };
 
 function init() {
     updateFileList();
@@ -22,11 +23,13 @@ function figureNumber(value) {
     return num;
 }
 function updateFileList() {
+    var targetDir = "TEMP";
     var TemporaryFolder = 2;
     var tfolder = fso.GetSpecialFolder(TemporaryFolder);
     if (document.getElementById('place_radio_desktop').checked) {
         var desktopPath = wsh.SpecialFolders('Desktop');
         tfolder = fso.GetFolder(desktopPath);
+        targetDir = "Desktop"
     }
     files = [];
     for (var enumFiles = new Enumerator(tfolder.Files)
@@ -51,13 +54,17 @@ function updateFileList() {
 
     var filterRexexText = document.getElementById('filterText').value;
     filterRexexText = filterRexexText.replace(/^\s+|\s+$/g, "");
-    var regexp = new RegExp(filterRexexText, "i");
+    var regexp;
+    if (filterRexexText === "") {
+        regexp = /.*/;
+    } else {
+        regexp = new RegExp(filterRexexText, "i");
+    }
+
     for (var i in files) {
         var f = files[i];
-        if (filterRexexText !== "") {
-            if (!f.name.match(regexp)) {
-                continue;
-            }
+        if (!f.name.match(regexp)) {
+            continue;
         }
         filelistDiv.appendChild(document.createTextNode(formatDate(new Date(f.dateLastModified)) + " "));
         var a = document.createElement('a');
@@ -68,6 +75,32 @@ function updateFileList() {
         filelistDiv.appendChild(document.createTextNode(' (' + figureNumber(f.size) + ')'));
         filelistDiv.appendChild(document.createElement('br'));
     }
+
+    if (targetDir === prevFiles.target) {
+        var newFileIndexList = [];
+        for (var i in files) {
+            var f1 = files[i];
+            var found = false;
+            for (var j in prevFiles.files) {
+                var f2 = prevFiles.files[j];
+                if (f1.name === f2.name) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                if (f1.name.match(regexp)) {
+                    newFileIndexList.push(i);
+                }
+            }
+        }
+        if (document.getElementById('auto_spawn_tailf_checkbox').checked) {
+            for (var i in newFileIndexList) {
+                showLogFile(newFileIndexList[i]);
+            }
+        }
+    }
+    prevFiles = {target: targetDir, files: files};
 }
 function showLogFile(index) {
     var f = files[index];
@@ -85,6 +118,7 @@ Filter: <input type="text" id="filterText" size="80" value="(\.log$)|(\.txt$)" /
 <!--
 <input type="radio" name="place" value="other">: <input type="text" name="p"><br>
 -->
+<input type="checkbox" id="auto_spawn_tailf_checkbox" checked> Auto<br />
 <hr>
 <input type="button" id="updateButton" value="Update File List" onclick="updateFileList()">
 <span id="update_time_label">Update Time Label</span>
