@@ -4,6 +4,7 @@
 <title>Auto Log Viewer</title>
 <script type="text/javascript">
 var fso = new ActiveXObject("Scripting.FileSystemObject");
+var wsh = new ActiveXObject("WScript.Shell");
 var files = [];
 function formatDate(d) {
     return (d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + d.getHours() + ':'
@@ -16,7 +17,12 @@ function figureNumber(value) {
 }
 function updateFileList() {
     var TemporaryFolder = 2
+    var TemporaryFolder = 2
     var tfolder = fso.GetSpecialFolder(TemporaryFolder);
+    if (document.getElementById('place_radio_desktop').checked) {
+        var desktopPath = wsh.SpecialFolders('Desktop');
+        tfolder = fso.GetFolder(desktopPath);
+    }
     files = [];
     for (var enumFiles = new Enumerator(tfolder.Files)
         ; ! enumFiles.atEnd(); enumFiles.moveNext()) {
@@ -35,7 +41,7 @@ function updateFileList() {
     for (var i = filelistDiv.childNodes.length - 1; i >= 0; i--) {
         filelistDiv.removeChild(filelistDiv.childNodes.item(i));
     }
-    var updateTimeLabelSpan = document.getElementById('updateTimeLabel');
+    var updateTimeLabelSpan = document.getElementById('update_time_label');
     updateTimeLabelSpan.innerHTML = new Date().toString();
     for (var i in files) {
         var f = files[i];
@@ -52,7 +58,6 @@ function updateFileList() {
 function showLogFile(index) {
     var f = files[index];
     var cmd = 'cmd /c title "' + f.name + '" & cscript //nologo tailf.js "' + f.path + '"';
-    var wsh = new ActiveXObject("WScript.Shell");
     wsh.Run(cmd);
 }
 window.attachEvent('onload', updateFileList);
@@ -60,14 +65,14 @@ window.attachEvent('onload', updateFileList);
 </head>
 <body>
 <form id="form1">
-<input type="radio" name="place" value="temp" checked>TEMP<br>
+<input type="radio" name="place" id="place_radio_temp" value="temp" checked>TEMP<br>
+<input type="radio" name="place" id="place_radio_desktop" value="desktop">Desktop<br>
 <!--
-<input type="radio" name="place" value="desktop">DESKTOP<br>
 <input type="radio" name="place" value="other">: <input type="text" name="p"><br>
 -->
 <hr>
 <input type="button" id="updateButton" value="Update File List" onclick="updateFileList()">
-<span id="updateTimeLabel">Update Time Label</span>
+<span id="update_time_label">Update Time Label</span>
 </form>
 <div id="filelist">
 <a id="f1" href="#" onclick="showLogFile()">file 1</a><br>
