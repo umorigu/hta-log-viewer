@@ -53,8 +53,7 @@ function updateFileList() {
 }
 function showLogFile(index) {
     var f = files[index];
-    var file = "tailf.js";
-    var cmd = 'cscript //nologo tailf.js "' + f.path + '"';
+    var cmd = 'cmd /c title "' + f.name + '" & cscript //nologo tailf.js "' + f.path + '"';
     var wsh = new ActiveXObject("WScript.Shell");
     wsh.Run(cmd);
 }
