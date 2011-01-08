@@ -4,7 +4,37 @@
 <title>Auto Log Viewer</title>
 <script type="text/javascript">
 var fso = new ActiveXObject("Scripting.FileSystemObject");
+var files = [];
 function updateFileList() {
+    var TemporaryFolder = 2
+    var tfolder = fso.GetSpecialFolder(TemporaryFolder);
+    files = [];
+    for (var enumFiles = new Enumerator(tfolder.Files)
+        ; ! enumFiles.atEnd(); enumFiles.moveNext()) {
+        var f = enumFiles.item();
+        var fd = {
+            name: f.Name,
+            path: f.Path,
+            dateLastModified: f.DateLastModified
+        };
+        files.push(fd);
+    }
+    var filelistDiv = document.getElementById('filelist');
+    for (var i = filelistDiv.childNodes.length - 1; i >= 0; i--) {
+        filelistDiv.removeChild(filelistDiv.childNodes.item(i));
+    }
+    filelistDiv.cler
+    filelistDiv.appendChild(document.createTextNode(new Date()));
+    filelistDiv.appendChild(document.createElement('br'));
+    for (var i in files) {
+        var f = files[i];
+        var a = document.createElement('a');
+        a.setAttribute('href', '');
+        a.attachEvent('onclick', new Function('showLogFile(' + i + '); return false;'));
+        a.appendChild(document.createTextNode(f.name));
+        filelistDiv.appendChild(a);
+        filelistDiv.appendChild(document.createElement('br'));
+    }
 }
 function showLogFile() {
     var file = "tailf.js";
@@ -12,13 +42,16 @@ function showLogFile() {
     var wsh = new ActiveXObject("WScript.Shell");
     wsh.Run(cmd);
 }
+window.attachEvent('onload', updateFileList);
 </script>
 </head>
 <body>
 <form id="form1">
 <input type="radio" name="place" value="temp" checked>TEMP<br>
+<!--
 <input type="radio" name="place" value="desktop">DESKTOP<br>
 <input type="radio" name="place" value="other">: <input type="text" name="p"><br>
+-->
 </form>
 <hr>
 <div id="filelist">
