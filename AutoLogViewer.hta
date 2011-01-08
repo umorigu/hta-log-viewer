@@ -1,0 +1,29 @@
+﻿<html>
+<head>
+<meta charset="UTF-8"/>
+<title>Auto Log Viewer</title>
+<script type="text/javascript">
+var fso = new ActiveXObject("Scripting.FileSystemObject");
+function updateFileList() {
+}
+function showLogFile() {
+    var file = "tailf.js";
+    var cmd = 'cscript //nologo tailf.js "' + file + '"';
+    var wsh = new ActiveXObject("WScript.Shell");
+    wsh.Run(cmd);
+}
+</script>
+</head>
+<body>
+<form id="form1">
+<input type="radio" name="place" value="temp" checked>TEMP<br>
+<input type="radio" name="place" value="desktop">DESKTOP<br>
+<input type="radio" name="place" value="other">: <input type="text" name="p"><br>
+</form>
+<hr>
+<div id="filelist">
+<a id="f1" href="#" onclick="showLogFile()">file 1</a><br>
+<a id="f2" href="#" onclick="showLogFile()">file 2</a><br>
+</div>
+</body>
+</html>
