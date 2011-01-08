@@ -43,8 +43,15 @@ function updateFileList() {
     }
     var updateTimeLabelSpan = document.getElementById('update_time_label');
     updateTimeLabelSpan.innerHTML = new Date().toString();
+
+    var filterRexexText = document.getElementById('filterText').value;
+    var regexp = new RegExp(filterRexexText, "i");
     for (var i in files) {
         var f = files[i];
+
+        if (!f.name.match(regexp)) {
+            continue;
+        }
         filelistDiv.appendChild(document.createTextNode(formatDate(new Date(f.dateLastModified)) + " "));
         var a = document.createElement('a');
         a.setAttribute('href', '');
@@ -65,6 +72,7 @@ window.attachEvent('onload', updateFileList);
 </head>
 <body>
 <form id="form1">
+Filter: <input type="text" id="filterText" size="80" value="(\.log$)|(\.txt$)" /><br />
 <input type="radio" name="place" id="place_radio_temp" value="temp" checked>TEMP<br>
 <input type="radio" name="place" id="place_radio_desktop" value="desktop">Desktop<br>
 <!--
